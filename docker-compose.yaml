@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  balance-service:
+    build: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+      - db
+    environment:
+      - PG_DSN=postgres://postgres:1505@db:5432/balance?sslmode=disable
+      - REDIS_CONNECTION=redis:6379
+      - POSTGRES_PASSWORD=1505
+
+  db:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "balance"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1505"
+    
+  redis:
+    image: redis/redis-stack-server:latest
+    ports:
+      - 6379:6379
+

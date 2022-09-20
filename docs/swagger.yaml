@@ -1,0 +1,171 @@
+basePath: /
+definitions:
+  mapper.Balance:
+    properties:
+      date:
+        type: string
+      money:
+        $ref: '#/definitions/mapper.Money'
+      user_id:
+        type: string
+    type: object
+  mapper.Money:
+    properties:
+      amount:
+        type: integer
+      code:
+        description: ISO 4217
+        type: string
+    type: object
+  mapper.Transfer:
+    properties:
+      amount:
+        type: integer
+      date:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      receiver_id:
+        type: string
+      sender_id:
+        type: string
+      type:
+        type: string
+    type: object
+  mapper.TransferRequest:
+    properties:
+      amount:
+        type: integer
+      receiver_id:
+        type: string
+      sender_id:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: This is balance service for transfer money between user accounts.
+  title: Balance Service
+  version: "1.0"
+paths:
+  /balance:
+    get:
+      consumes:
+      - application/json
+      operationId: balance
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - description: Currency code
+        in: query
+        name: currency
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: user balance
+          schema:
+            $ref: '#/definitions/mapper.Balance'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get user account balance
+      tags:
+      - balance
+  /transfer:
+    post:
+      consumes:
+      - application/json
+      operationId: transfer
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/mapper.TransferRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Transfer money between user accounts
+      tags:
+      - transfers
+  /transfers:
+    get:
+      consumes:
+      - application/json
+      operationId: transfers
+      parameters:
+      - in: query
+        name: amountEQ
+        type: integer
+      - in: query
+        name: amountGTE
+        type: integer
+      - description: Amount filter
+        in: query
+        name: amountLTE
+        type: integer
+      - description: Date filter
+        in: query
+        name: dateFrom
+        type: string
+      - in: query
+        name: dateTo
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: perPage
+        type: integer
+      - in: query
+        name: transferType
+        type: string
+      - in: query
+        name: userID
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: list transfers
+          schema:
+            items:
+              $ref: '#/definitions/mapper.Transfer'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get list transfers for filter
+      tags:
+      - transfers
+swagger: "2.0"

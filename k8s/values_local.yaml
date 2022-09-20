@@ -1,0 +1,13 @@
+env:
+  - name: PORT
+    value: ":8000"
+  - name: EXCHANGE_RATE_TTL
+    value: 20
+  - name: APIKEY
+    value: "UHkj56kChbI8XPhGzINmWHob4WsFqmAg"
+
+secrets:
+  - name: "pg_dsn"
+    value: "postgres://postgres:1505@localhost:5432/balance?sslmode=disable"
+  - name: "redis_connection"
+    value: "localhost:6379"
